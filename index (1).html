@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ansible Complete Notes - Day 15</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: #020617;
+    padding: 20px;
+    position: fixed;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    color: #38bdf8;
+}
+
+.sidebar a {
+    display: block;
+    color: #cbd5f5;
+    text-decoration: none;
+    padding: 10px 0;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    color: #38bdf8;
+    transform: translateX(5px);
+}
+
+/* Content */
+.content {
+    margin-left: 280px;
+    padding: 40px;
+    max-width: 1000px;
+}
+
+h1, h2, h3 {
+    color: #38bdf8;
+}
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+code, pre {
+    background: #020617;
+    padding: 10px;
+    border-radius: 8px;
+    display: block;
+    overflow-x: auto;
+    color: #22c55e;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #334155;
+}
+
+th {
+    background: #0f172a;
+    color: #38bdf8;
+}
+
+/* Highlight box */
+.note {
+    background: #022c22;
+    padding: 15px;
+    border-left: 5px solid #22c55e;
+    margin: 15px 0;
+}
+
+/* Responsive */
+@media(max-width: 900px) {
+    .sidebar {
+        display: none;
+    }
+    .content {
+        margin-left: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Ansible Notes</h2>
+    <a href="#intro">What is Ansible?</a>
+    <a href="#features">Features</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#components">Components</a>
+    <a href="#workflow">How it Works</a>
+    <a href="#install">Installation</a>
+    <a href="#ssh">SSH Setup</a>
+    <a href="#inventory">Inventory</a>
+    <a href="#adhoc">Ad-Hoc Commands</a>
+    <a href="#playbook">Playbook</a>
+    <a href="#modules">Modules</a>
+    <a href="#qa">Interview Q&A</a>
+</div>
+
+<div class="content">
+
+<h1>Ansible Complete Notes</h1>
+
+<div class="card" id="intro">
+<h2>What is Ansible?</h2>
+<p>Ansible is an <b>open-source, agentless IT automation tool</b> used for configuration management, deployment, and provisioning.</p>
+
+<div class="note">
+Simple: Control multiple servers from one machine without installing software on them.
+</div>
+</div>
+
+<div class="card" id="features">
+<h2>Key Features</h2>
+<table>
+<tr><th>Feature</th><th>Description</th></tr>
+<tr><td>Agentless</td><td>No software needed on target nodes</td></tr>
+<tr><td>Simple Syntax</td><td>Uses YAML</td></tr>
+<tr><td>Idempotent</td><td>Safe to re-run</td></tr>
+<tr><td>Push-Based</td><td>Sends config from control node</td></tr>
+<tr><td>Scalable</td><td>Handles thousands of servers</td></tr>
+</table>
+</div>
+
+<div class="card" id="architecture">
+<h2>Architecture</h2>
+<pre>
+Control Node → SSH → Managed Nodes
+(No agent required)
+</pre>
+</div>
+
+<div class="card" id="components">
+<h2>Core Components</h2>
+<ul>
+<li><b>Control Node</b> – Where Ansible runs</li>
+<li><b>Managed Nodes</b> – Target servers</li>
+<li><b>Inventory</b> – List of servers</li>
+<li><b>Modules</b> – Task executors</li>
+<li><b>Playbooks</b> – YAML automation scripts</li>
+<li><b>Roles</b> – Organized structure</li>
+</ul>
+</div>
+
+<div class="card" id="workflow">
+<h2>How Ansible Works</h2>
+<ol>
+<li>Create Inventory</li>
+<li>Write Playbook</li>
+<li>Run command</li>
+<li>SSH into servers</li>
+<li>Execute tasks</li>
+</ol>
+</div>
+
+<div class="card" id="install">
+<h2>Installation</h2>
+<pre>
+sudo apt update
+sudo apt install ansible -y
+ansible --version
+</pre>
+</div>
+
+<div class="card" id="ssh">
+<h2>Passwordless SSH Setup</h2>
+<pre>
+ssh-keygen
+cat ~/.ssh/id_rsa.pub
+# Paste into target authorized_keys
+</pre>
+</div>
+
+<div class="card" id="inventory">
+<h2>Inventory Example</h2>
+<pre>
+[webservers]
+192.168.1.10
+192.168.1.11
+</pre>
+</div>
+
+<div class="card" id="adhoc">
+<h2>Ad-Hoc Commands</h2>
+<pre>
+ansible -i inventory all -m shell -a "df -h"
+</pre>
+</div>
+
+<div class="card" id="playbook">
+<h2>Sample Playbook</h2>
+<pre>
+- name: Install Nginx
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+</pre>
+</div>
+
+<div class="card" id="modules">
+<h2>Important Modules</h2>
+<table>
+<tr><th>Module</th><th>Usage</th></tr>
+<tr><td>apt</td><td>Install packages</td></tr>
+<tr><td>service</td><td>Manage services</td></tr>
+<tr><td>copy</td><td>Copy files</td></tr>
+<tr><td>shell</td><td>Run commands</td></tr>
+</table>
+</div>
+
+<div class="card" id="qa">
+<h2>Interview Q&A</h2>
+<ul>
+<li><b>What is Ansible?</b> Agentless automation tool</li>
+<li><b>Idempotency?</b> Same result every run</li>
+<li><b>Push vs Pull?</b> Ansible is push-based</li>
+<li><b>Inventory?</b> Server list file</li>
+</ul>
+</div>
+
+</div>
+
+</body>
+</html>
